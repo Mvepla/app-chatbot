@@ -20,7 +20,7 @@ with st.sidebar:
     os.environ['REPLICATE_API_TOKEN'] = replicate_api
 
     st.subheader('Models and parameters')
-    selected_model = st.sidebar.selectbox('Choose a Llama2 model', ['Llama2-7B', 'Llama2-13B'], key='selected_model')
+    selected_model = st.sidebar.selectbox('Choose a Llama2 model', ['Llama2-7B', 'Llama2-13B','stable-diffusion'], key='selected_model')
     if selected_model == 'Llama2-7B':
         llm = 'a16z-infra/llama7b-v2-chat:4f0a4744c7295c024a1de15e1a63c880d3da035fa1f49bfd344fe076074c8eea'
     elif selected_model == 'Llama2-13B':
@@ -84,15 +84,24 @@ if prompt := st.chat_input(disabled=not replicate_api):
 
 # Generate a new response if last message is not from assistant
 if st.session_state.messages[-1]["role"] != "assistant":
-    with st.chat_message("assistant"):
-        with st.spinner("Thinking..."):
-            response = generate_llama2_response(prompt)
-            response = generate_stable_diffusion(prompt)
-            placeholder = st.empty()
-            full_response = ''
-            for item in response:
-                full_response += item
+    if selected_model == 'Llama2-7B' or selected_model == 'Llama2-13B':
+        with st.chat_message("assistant"):
+            with st.spinner("Thinking..."):
+                response = generate_llama2_response(prompt)
+                placeholder = st.empty()
+                full_response = ''
+                for item in response:
+                    full_response += item
+                 placeholder.markdown(full_response)
                 placeholder.markdown(full_response)
-            placeholder.markdown(full_response)
-    message = {"role": "assistant", "content": full_response}
-    st.session_state.messages.append(message)
+        message = {"role": "assistant", "content": full_response}
+        st.session_state.messages.append(message)
+
+    elif selected_model == 'stable-diffusion':
+        with st.chat_message("assistant"):
+            with st.spinner("Drawing..."):
+                response = generate_stable_diffusion(prompt)
+                response = requests.get(response)
+                if response_status_code == 200:
+                    image= Image.open(BytesIO(response.content))
+                    st.image(image)
