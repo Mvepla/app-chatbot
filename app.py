@@ -5,6 +5,7 @@ import os
 from PIL import Image
 from io import BytesIO
 
+
 # App title
 st.set_page_config(page_title="🦙💬 Llama 2 Chatbot")
 
@@ -14,6 +15,7 @@ with st.sidebar:
     if 'REPLICATE_API_TOKEN' in st.secrets:
         st.success('API key already provided!', icon='✅')
         replicate_api = st.secrets['REPLICATE_API_TOKEN']
+        
     else:
         replicate_api = st.text_input('Enter Replicate API token:', type='password')
         if not (replicate_api.startswith('r8_') and len(replicate_api)==40):
@@ -70,13 +72,15 @@ def generate_stable_diffusion(prompt_input):
     output = replicate.run(
         "stability-ai/stable-diffusion:ac732df83cea7fff18b8472768c88ad041fa750ff7682a21affe81863cbe77e4",
         input={
-            "width": 768,
-            "height": 768,
-            "prompt": prompt_input,
-            "scheduler": "K_EULER",
-            "num_outputs": 1,
-            "guidance_scale": 7.5,
-            "num_inference_steps": 50})
+    "width": 768,
+    "height": 768,
+    "prompt": "shark reading a book",
+    "scheduler": "K_EULER",
+    "num_outputs": 1,
+    "guidance_scale": 7.5,
+    "num_inference_steps": 50
+  }
+)
     return output
 
 # User-provided prompt
