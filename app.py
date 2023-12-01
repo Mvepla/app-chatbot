@@ -1,6 +1,9 @@
 import streamlit as st
 import replicate
+import request
 import os
+from PIL import Image
+from io import BytesIO
 
 # App title
 st.set_page_config(page_title="🦙💬 Llama 2 Chatbot")
