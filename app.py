@@ -1,6 +1,6 @@
 import streamlit as st
 import replicate
-import request
+import requests
 import os
 from PIL import Image
 from io import BytesIO
