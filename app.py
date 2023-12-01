@@ -88,7 +88,7 @@ if prompt := st.chat_input(disabled=not replicate_api):
 # Generate a new response if last message is not from assistant
 # Generate a new response if last message is not from assistant
 if st.session_state.messages[-1]["role"] != "assistant":
-        if selected_model == 'Stable-Diffusion':
+        if selected_model == 'stable-diffusion':
             with st.chat_message("assistant"):
                 with st.spinner("Drawing..."):
                     response = generate_stable_diffusion(prompt)
